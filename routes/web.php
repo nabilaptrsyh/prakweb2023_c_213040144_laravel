@@ -1,6 +1,11 @@
 <?php
 
+use App\Models\Post;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PostController;
+
+use App\Models\Category;
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,59 +34,28 @@ Route::get('/about', function () {
 });
 
 
+Route::get('/blog', [PostController::class,'index']);
+Route::get('/posts/{post:slug}', [PostController::class,'show']);
 
+Route::get('/categories', function() {
+    return view('categories', [
+        'title' => 'Post Categories',
+        'categories' => Category::all()
+    ]);
+});
 
-Route::get('/blog', function () {
-    $blog_posts = [
-        [
-            "title" => "Black Hole",
-            "slug" => "black-hole",
-            "author" => "Nabila Putri Aisyah Insirawati",
-            "body" => "A black hole is a region in space where gravity is so strong that nothing, including light or other electromagnetic waves, can escape it. They form from the remnants of a large star that dies in a supernova explosion, and the resulting gravitational field is incredibly powerful. Key features of a black hole include the event horizon, which is the boundary in spacetime through which matter and light can only pass inward towards the mass of the black hole, and the singularity, which is the point at the center of a black hole where spacetime curvature becomes infinite."
-        ],
-    
-        [
-            "title" => "Aurora",
-            "slug" => "aurora",
-            "author" => "Gilang Syaputra",
-            "body" => "Aurora is a natural light display in Earth's sky, predominantly seen in high-latitude regions. It is also known as the northern lights (aurora borealis) or southern lights (aurora australis). Aurora is caused by the ionization and excitation of atmospheric constituents leading to auroral emissions."
-        ],
-    ];
-
+Route::get('/categories/{category:slug}', function(Category $category) {
     return view('posts', [
-        "title" => "Post",
-        "posts" => $blog_posts
+        'title' => "Post by category : $category->name",
+        'posts' => $category->posts->load('category', 'author'),
+        // 'category' => $category->name
     ]);
 });
 
 
-// halaman single post
-Route::get('posts/{slug}', function($slug) {
-        $blog_posts = [
-            [
-                "title" => "Black Hole",
-                "slug" => "black-hole",
-                "author" => "Nabila Putri Aisyah Insirawati",
-                "body" => "A black hole is a region in space where gravity is so strong that nothing, including light or other electromagnetic waves, can escape it. They form from the remnants of a large star that dies in a supernova explosion, and the resulting gravitational field is incredibly powerful. Key features of a black hole include the event horizon, which is the boundary in spacetime through which matter and light can only pass inward towards the mass of the black hole, and the singularity, which is the point at the center of a black hole where spacetime curvature becomes infinite."
-            ],
-        
-            [
-                "title" => "Aurora",
-                "slug" => "aurora",
-                "author" => "Gilang Syaputra",
-                "body" => "Aurora is a natural light display in Earth's sky, predominantly seen in high-latitude regions. It is also known as the northern lights (aurora borealis) or southern lights (aurora australis). Aurora is caused by the ionization and excitation of atmospheric constituents leading to auroral emissions."
-            ],
-        ];
-
-        $new_post = [];
-        foreach($blog_posts as $post) {
-            if($post["slug"] === $slug) {
-                $new_post = $post;
-            }
-        }
-
-        return view('post', [
-            "title" => "Single Post",
-            "post" => $new_post
-        ]);
-    });
+Route::get('/authors/{author:username}', function(User $author) {
+    return view('posts', [
+        'title' => "Post By Author : $author->name",
+        'posts' => $author->posts->load('category', 'author'),
+    ]);
+});
