@@ -1,33 +1,33 @@
-<?php 
+<?php
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
-use illuminate\Http\Request;
-use App\Models\Post;
-use App\Models\User;
+use Illuminate\Http\Request;
+use \App\Models\Post;
+use \App\Models\Category;
+use \App\Models\User;
+
 
 class PostController extends Controller
-
 {
-    public function index() 
+    public function index()
     {
-
-        $title = '';
+        $title='';
         if(request('category')) {
             $category = Category::firstWhere('slug', request('category'));
             $title = ' in ' . $category->name;
         }
-
+        // dd(request('search'));
         if(request('author')) {
             $author = User::firstWhere('username', request('author'));
-            $title = ' in ' . $author->name;
+            $title = ' by ' . $author->name;
         }
 
         return view('posts', [
-            "title" => "All Post",
-            "active" => 'posts',
-            "posts" => Post::latest()->filter(request(['search', 'category', 'author']))->paginate(7)->withQueryString()
+        "title" => "All Posts",
+        "title" => "All Posts" . $title,
+        "active" => "posts",
+        "posts" => Post::latest()->filter(request(['search', 'category', 'author']))->paginate(7)->withQueryString()
         ]);
     }
 
@@ -35,12 +35,8 @@ class PostController extends Controller
     {
         return view('post', [
             "title" => "Single Post",
-            "active" => 'posts',
-            "post" => $post 
+            "active" => "posts",
+            "post" => $post
         ]);
     }
 }
-
-
-
-?>
