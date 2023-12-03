@@ -32,9 +32,9 @@ Route::get('/about', function () {
     return view('about', [
         "title" => "About",
         "active" => "about",
-        "name" => "Lisa BlackPink",
-        "email" => "lisa@unpas.ac.id",
-        "image" => "lisa.jpg"
+        "name" => "Nabila Putri Aisyah Insirawati",
+        "email" => "lllalanabila300@gmail.com",
+        "image" => "nabila.jpg"
     ]);
 });
 
