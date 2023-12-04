@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Cviebrock\EloquentSluggable\Sluggable;
+                                                                                            use Cviebrock\EloquentSluggable\Sluggable;
 
 class Post extends Model
 {
@@ -12,7 +12,7 @@ class Post extends Model
 
     // protected $fillable = [
     //     'title', 'excerpt','body'
-    // ];
+    // ];               
 
     protected $guarded = ['id'];
     protected $with =['category', 'author'];

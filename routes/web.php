@@ -74,7 +74,10 @@ Route::get('/register', [RegisterController::class, 'index'])->middleware('guest
 Route::post('/register', [RegisterController::class, 'store']);
 
 Route::get('/dashboard', function() {
-    return view('dashboard.index');
+    $posts = Post::where('user_id', auth()->user()->id)->get();
+    return view('dashboard.index',[
+        'posts' => $posts
+    ]);
 }) ->middleware('auth'); 
 
 Route::get('/dashboard/posts/checkSlug', [DashboardPostController::class, 'checkSlug'])->middleware('auth');
